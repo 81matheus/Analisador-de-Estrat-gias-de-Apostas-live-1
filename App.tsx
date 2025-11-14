@@ -2,10 +2,8 @@
 import React, { useState, useCallback } from 'react';
 import { StrategyStats, Match } from './types';
 import { analyzeData, parseCSV } from './services/analysisService';
-import { getStrategyInsights } from './services/geminiService';
 import Header from './components/Header';
 import Dashboard from './components/Dashboard';
-import GeminiInsights from './components/GeminiInsights';
 import DataUploader from './components/DataUploader';
 import StrategyDetail from './components/StrategyDetail';
 import { Loader2 } from 'lucide-react';
@@ -17,10 +15,6 @@ const App: React.FC = () => {
     const [totalMatches, setTotalMatches] = useState<number>(0);
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
-
-    const [geminiInsights, setGeminiInsights] = useState<string | null>(null);
-    const [isGeminiLoading, setIsGeminiLoading] = useState<boolean>(false);
-
     const [selectedStrategy, setSelectedStrategy] = useState<StrategyStats | null>(null);
 
 
@@ -28,7 +22,6 @@ const App: React.FC = () => {
         setIsLoading(true);
         setError(null);
         setAnalysisResults([]);
-        setGeminiInsights(null);
         setTotalMatches(0);
         setAllMatches([]);
         setSelectedStrategy(null);
@@ -56,23 +49,6 @@ const App: React.FC = () => {
         }
     }, []);
     
-    const handleGetInsights = useCallback(async () => {
-        if (analysisResults.length === 0) return;
-
-        setIsGeminiLoading(true);
-        setGeminiInsights(null);
-        setError(null);
-
-        try {
-            const insights = await getStrategyInsights(analysisResults);
-            setGeminiInsights(insights);
-        } catch (err: any) {
-            setError("Falha ao obter insights da IA. Verifique sua chave de API e a conexão.");
-        } finally {
-            setIsGeminiLoading(false);
-        }
-    }, [analysisResults]);
-
     const handleSelectStrategy = useCallback((strategy: StrategyStats) => {
         setSelectedStrategy(strategy);
     }, []);
@@ -118,13 +94,7 @@ const App: React.FC = () => {
                                 <Dashboard 
                                     results={analysisResults} 
                                     totalMatches={totalMatches}
-                                    onGetInsights={handleGetInsights}
-                                    isGeminiLoading={isGeminiLoading}
                                     onSelectStrategy={handleSelectStrategy}
-                                />
-                                <GeminiInsights 
-                                    insights={geminiInsights} 
-                                    isLoading={isGeminiLoading}
                                 />
                             </>
                         )}
