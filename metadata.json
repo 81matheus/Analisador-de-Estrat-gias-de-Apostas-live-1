@@ -1,0 +1,5 @@
+{
+  "name": "Analisador de Estratégias de Apostas",
+  "description": "Um aplicativo para analisar dados de jogos de futebol a partir de arquivos CSV e encontrar as estratégias de apostas mais eficazes. Faça o upload dos seus dados e descubra os melhores padrões e ranges para criar seus bots de apostas.",
+  "requestFramePermissions": []
+}
